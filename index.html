@@ -29,9 +29,6 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;outline-offset:3px}
 .stage.custom-background::before,.stage.custom-background > .moon,.stage.custom-background > .cloud,.stage.custom-background > .hill,.stage.custom-background > .stage-floor,.stage.custom-background > .curtain,.stage.custom-background > .lantern-decoration{display:none!important}
 .monster img.avatar{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
 .portrait img.avatar{width:100%;height:100%;max-height:100%;object-fit:contain;-webkit-user-drag:none}
-.music-toggle{position:absolute;top:9px;right:9px;z-index:20;min-width:74px;min-height:35px;border:1px solid #b8a6de99;border-radius:20px;background:#221c57d9;color:#fff5d0;font-weight:800;font-size:13px;line-height:1.1;padding:6px 9px;box-shadow:0 2px 8px #1a103855}
-.music-toggle:active{transform:translateY(1px)}
-@media(max-width:560px){.music-toggle{top:7px;right:7px;min-width:65px;min-height:31px;font-size:12px;padding:5px 7px}.stage-top h1{max-width:calc(100vw - 92px);font-size:17px}}
 /* selector */
 .panel{background:var(--panel);min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:6px;padding:9px 15px 11px;box-shadow:0 -5px 0 #eac99c;border-top:4px solid #e2a96a;z-index:10}
 .panel-heading{display:flex;gap:8px;justify-content:space-between;align-items:center;min-height:26px}.panel-heading strong{font-size:clamp(14px,1.4vw,18px);white-space:nowrap}.panel-heading .subtle{font-size:12px;color:#786a83}.total{border-radius:30px;background:#fff5d6;padding:5px 12px;font-weight:900;color:#754362;white-space:nowrap;font-size:14px}.total b{font-size:20px;color:#c15a5d;font-variant-numeric:tabular-nums}
@@ -214,7 +211,6 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;outline-offset:3px}
  <div class="moon"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="hill"></div><div class="hill h2"></div>
  <div class="stage-floor"></div><div class="curtain l"></div><div class="curtain r"></div><div class="lantern-decoration left"></div><div class="lantern-decoration right"></div>
  <div class="stage-top"><div class="eyebrow">YOKAI DANCE PARTY</div><h1>ようかい どんちゃんダンス</h1></div>
- <button id="musicToggle" class="music-toggle" type="button" aria-label="BGMを再生・停止" aria-pressed="true">♪ BGM</button>
  <div class="stage-note" id="modeText">どの ようかいを よぼうかな？</div>
  <div class="stage-message" id="stageMessage" aria-live="polite">すきな ようかいを えらんで<br>「＝」を おしてね！</div>
  <div id="playfield" class="playfield"></div><div id="tapHint" class="tap-hint">👆 おどる ようかいを タップ！</div>
@@ -227,7 +223,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;outline-offset:3px}
 <div class="monster-card" data-kind="dracula"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-dracula"></use></svg></div><div class="card-right"><div class="monster-name">ドラキュラ</div><div class="stepper"><button class="step minus" type="button" aria-label="ドラキュラを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="ドラキュラを1たいふやす">＋</button></div></div></div>
 <div class="monster-card" data-kind="ittanmomen"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-ittanmomen"></use></svg></div><div class="card-right"><div class="monster-name">一反木綿</div><div class="stepper"><button class="step minus" type="button" aria-label="一反木綿を1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="一反木綿を1たいふやす">＋</button></div></div></div>
 <div class="monster-card" data-kind="gashadokuro"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-gashadokuro"></use></svg></div><div class="card-right"><div class="monster-name">がしゃどくろ</div><div class="stepper"><button class="step minus" type="button" aria-label="がしゃどくろを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="がしゃどくろを1たいふやす">＋</button></div></div></div>
-<div class="monster-card" data-kind="tengu"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-tengu"></use></svg></div><div class="card-right"><div class="monster-name">てんぐ</div><div class="stepper"><button class="step minus" type="button" aria-label="てんぐを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="てんぐを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="tengu"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-tengu"></use></svg></div><div class="card-right"><div class="monster-name">からすてんぐ</div><div class="stepper"><button class="step minus" type="button" aria-label="からすてんぐを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="からすてんぐを1たいふやす">＋</button></div></div></div>
 <div class="monster-card" data-kind="rokuro"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-rokuro"></use></svg></div><div class="card-right"><div class="monster-name">ろくろくび</div><div class="stepper"><button class="step minus" type="button" aria-label="ろくろくびを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="ろくろくびを1たいふやす">＋</button></div></div></div>
 <div class="monster-card" data-kind="nurikabe"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-nurikabe"></use></svg></div><div class="card-right"><div class="monster-name">ぬりかべ</div><div class="stepper"><button class="step minus" type="button" aria-label="ぬりかべを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="ぬりかべを1たいふやす">＋</button></div></div></div>
 </div>
@@ -240,7 +236,7 @@ button{font:inherit;cursor:pointer;touch-action:manipulation;outline-offset:3px}
 const YOKAI=[
  {id:'umbrella',name:'からかさ'}, {id:'kappa',name:'かっぱ'},
  {id:'dracula',name:'ドラキュラ'}, {id:'ittanmomen',name:'一反木綿'},
- {id:'gashadokuro',name:'がしゃどくろ'}, {id:'tengu',name:'てんぐ'},
+ {id:'gashadokuro',name:'がしゃどくろ'}, {id:'tengu',name:'からすてんぐ'},
  {id:'rokuro',name:'ろくろくび'}, {id:'nurikabe',name:'ぬりかべ'}
 ];
 const MAX_EACH=9, MAX_STAGE=30;
@@ -250,33 +246,22 @@ const playfield=document.getElementById('playfield'),stage=document.getElementBy
 const message=document.getElementById('stageMessage'),modeText=document.getElementById('modeText');
 const start=document.getElementById('start'),startLabel=document.getElementById('startLabel'),reset=document.getElementById('reset');
 
-// MUSIC: 'music.mp3' must be alongside 'index.html'. Loops during selection,
-// dancing, and after the dancers leave. Mobile browsers require a gesture.
-const bgm=document.getElementById('bgm'),musicToggle=document.getElementById('musicToggle');
-let musicEnabled=true;
-function musicStatus(){
- musicToggle.setAttribute('aria-pressed',String(musicEnabled));
- musicToggle.textContent=!musicEnabled?'♪ OFF':bgm.error?'♪ 音源なし':!bgm.paused?'♫ ON':'♪ BGM';
-}
+// MUSIC: Begin only when 「＝ レッツ　ダンス」 is pressed to start a show.
+// After that, music.mp3 keeps looping even between shows.
+const bgm=document.getElementById('bgm');
+let musicStarted=false;
 function playMusic(){
- if(!musicEnabled || !bgm.paused || bgm.error)return;
+ if(!musicStarted || !bgm.paused || bgm.error)return;
  const action=bgm.play();
- if(action&&typeof action.then==='function')action.then(musicStatus).catch(musicStatus);
+ if(action && typeof action.catch==='function')action.catch(()=>{});
 }
-musicToggle.addEventListener('click',()=>{
- musicEnabled=!musicEnabled;
- if(musicEnabled)playMusic();else bgm.pause();
- musicStatus();
-});
-bgm.addEventListener('playing',musicStatus);
-bgm.addEventListener('pause',musicStatus);
-bgm.addEventListener('error',musicStatus);
+function startMusic(){
+ if(musicStarted)return; // Never restart the track on subsequent dances.
+ musicStarted=true;
+ playMusic(); // Called directly from the button click: works on iOS Safari.
+}
+// Restore playback when the browser comes back from a suspended/background state.
 bgm.addEventListener('ended',playMusic);
-// Attempt autoplay; Safari/iPhone may block this until the first touch.
-playMusic();
-for(const eventType of ['pointerdown','touchend','click','keydown']){
- document.addEventListener(eventType,playMusic,{capture:true,passive:true});
-}
 document.addEventListener('visibilitychange',()=>{if(!document.hidden)playMusic()});
 window.addEventListener('pageshow',playMusic);
 
@@ -335,7 +320,7 @@ function chooseMode(chosen){
  if(ids.has('umbrella')&&ids.has('ittanmomen'))return {type:'spin',text:'🌀 からかさと 一反木綿の くるくるダンス！'};
  if(ids.has('gashadokuro')&&ids.has('rokuro'))return {type:'bones',text:'💀 がしゃどくろと ろくろくびの ガタガタダンス！'};
  if(ids.has('kappa')&&ids.has('gashadokuro'))return {type:'chase',text:'👣 がしゃどくろが かっぱを おいかける！'};
- if(ids.has('tengu')&&ids.has('nurikabe'))return {type:'dodge',text:'💨 てんぐが ぬりかべを とびこえる！'};
+ if(ids.has('tengu')&&ids.has('nurikabe'))return {type:'dodge',text:'💨 からすてんぐが ぬりかべを とびこえる！'};
  if(num===1&&chosen[0].count>=3)return {type:'sync',text:'🎵 おなじ ようかいでも ちがう おどり！'};
  if(chosen.reduce((sum,c)=>sum+c.count,0)===1)return {type:'solo',text:'✨ ひとりで ノリノリ！'};
  return {type:'party',text:'🎶 わいわい ダンスタイム！'};
@@ -731,6 +716,7 @@ let currentMode='party';
 function perform(){
  if(running)return;
  const total=selectedTotal();if(!total){say('まず ようかいを 1たい えらんでね！');return}
+ startMusic(); // First valid dance button press starts the BGM, with no later reset.
  const chosen=YOKAI.filter(y=>counts[y.id]>0).map(y=>({...y,count:counts[y.id]}));
  const mode=chooseMode(chosen);currentMode=mode.type;
  const deck=[];const maximum=Math.max(...chosen.map(y=>y.count));
