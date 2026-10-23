@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<title>ようかい どんちゃんダンス</title>
+<style>
+:root{--ink:#32224d;--violet:#413075;--aqua:#75f2da;--gold:#ffda73;--panel:#f8f4ed}
+*{box-sizing:border-box}html,body{width:100%;height:100%;margin:0;overflow:hidden}body{font-family:'UD デジタル 教科書体 NK-R','UD Digi Kyokasho NK-R','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif;color:var(--ink);user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+button{font:inherit;cursor:pointer;touch-action:manipulation;outline-offset:3px}button:disabled{cursor:not-allowed;opacity:.6}#app{height:100vh;height:100dvh;display:grid;grid-template-rows:minmax(0,2fr) minmax(0,1fr);overflow:hidden;background:#211b46}
+/* stage */
+.stage{position:relative;min-height:0;overflow:hidden;isolation:isolate;background:radial-gradient(circle at 63% 22%,#665299 0,#3c306a 36%,#29244e 76%,#211e46 100%)}
+.stage::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#fef1d1 1.5px,transparent 2px),radial-gradient(#c9f9ef 1px,transparent 1.5px);background-position:5% 12%,14% 40%;background-size:139px 89px,173px 113px;opacity:.45;pointer-events:none}
+.moon{position:absolute;width:clamp(94px,12vw,165px);height:clamp(94px,12vw,165px);border-radius:100%;top:8%;right:11%;background:radial-gradient(circle at 35% 34%,#fff9db,#ffe9a4 80%);box-shadow:0 0 0 18px #fff7cb09,0 0 70px #ffdc99a0;opacity:.95}
+.cloud{position:absolute;height:24px;border-radius:99px;background:#b7a3d453;filter:blur(1px)}.cloud:before,.cloud:after{content:"";position:absolute;background:inherit;border-radius:99px}.cloud:before{width:45%;height:45px;bottom:1px;left:14%}.cloud:after{width:42%;height:36px;bottom:2px;right:9%}.cloud.c1{width:170px;left:27%;top:29%}.cloud.c2{width:125px;right:21%;top:35%;opacity:.75}.cloud.c3{width:130px;left:7%;top:51%;opacity:.48}
+.hill{position:absolute;left:-8%;bottom:5%;width:68%;height:27%;background:#292546;border-radius:60% 80% 0 0;opacity:.8}.hill.h2{left:48%;width:72%;height:32%;background:#262142}
+.stage-floor{position:absolute;bottom:0;left:0;right:0;height:17%;background:linear-gradient(180deg,#4b3480 0%,#302659 38%,#1f193f 100%);border-top:8px solid #a97cba;box-shadow:0 -8px 22px #a980b124;z-index:2}.stage-floor:before{content:"";position:absolute;inset:15% 0 0;background:repeating-linear-gradient(90deg,transparent 0,transparent 8%,#c4a3de1b 8.1%,#c4a3de1b 8.35%)}.stage-floor:after{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,transparent,#fbd688ad 30%,#fbd688ad 70%,transparent)}
+.curtain{position:absolute;z-index:3;top:-20px;width:125px;height:78%;background:linear-gradient(90deg,#271c42,#53356d 36%,#34254c 72%,#211a34);opacity:.55;pointer-events:none}.curtain.l{left:-113px;transform:rotate(-6deg)}.curtain.r{right:-113px;transform:rotate(6deg)}
+.lantern-decoration{position:absolute;z-index:4;top:0;width:36px;height:75px;pointer-events:none}.lantern-decoration.left{left:3%;top:85px}.lantern-decoration.right{right:5%}.lantern-decoration:before{content:"";position:absolute;left:17px;top:0;width:2px;height:20px;background:#e4d1b6}.lantern-decoration:after{content:"祭";position:absolute;top:20px;left:0;width:36px;height:46px;display:grid;place-items:center;color:#9e4b60;font-weight:900;font-size:18px;background:linear-gradient(90deg,#ffb6a3,#fff1bc 50%,#ffa2a5);border:3px solid #e48d89;border-radius:13px;box-shadow:0 0 21px #ffc0a588}
+.stage-top{position:absolute;left:18px;top:13px;z-index:9;color:white;pointer-events:none;text-shadow:0 2px 8px #1d133b}.stage-top .eyebrow{font-size:12px;letter-spacing:.25em;color:#91f8e0;font-weight:900}.stage-top h1{margin:1px 0 0;font-size:clamp(20px,2.5vw,33px);font-weight:900;letter-spacing:.07em;line-height:1.25}
+.stage-note{position:absolute;z-index:9;top:15px;left:50%;transform:translateX(-50%);min-width:min(56vw,350px);max-width:61vw;min-height:39px;padding:8px 15px;border-radius:90px;background:#211a4ca8;border:1px solid #bda6e580;color:#fff5d7;text-align:center;font-weight:900;font-size:clamp(14px,1.65vw,20px);white-space:nowrap;box-shadow:0 3px 15px #20113828;pointer-events:none}
+.stage-message{position:absolute;z-index:8;left:50%;top:49%;transform:translate(-50%,-50%);color:#fff4dc;text-shadow:0 3px 12px #161334;max-width:80%;text-align:center;font-size:clamp(22px,2.4vw,34px);line-height:1.6;font-weight:900;white-space:pre-line;pointer-events:none}.stage-message.hidden{opacity:0}.stage-message.pop{animation:messagePop .5s both}
+@keyframes messagePop{0%{opacity:0;transform:translate(-50%,-50%) scale(.7)}70%{transform:translate(-50%,-50%) scale(1.12)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.playfield{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}.monster{position:absolute;will-change:transform,opacity;transform-origin:50% 84%;opacity:0;filter:drop-shadow(0 5px 3px #130e3950)}.monster .avatar{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 2px 0 #211c4960);transform-origin:50% 75%}.monster.is-dancing .avatar{animation:groove .48s ease-in-out infinite alternate}.monster[data-kind="umbrella"].is-dancing .avatar{animation:tilt .55s infinite alternate}.monster[data-kind="dracula"].is-dancing .avatar{animation:batSway .52s infinite alternate}.monster[data-kind="ittanmomen"].is-dancing .avatar{animation:clothWave .9s ease-in-out infinite alternate}.monster[data-kind="gashadokuro"].is-dancing .avatar{animation:boneRattle .22s infinite alternate}.monster[data-kind="nurikabe"].is-dancing .avatar{animation:wallShake .25s infinite alternate}
+@keyframes groove{from{transform:rotate(-8deg) skewX(-2deg)}to{transform:rotate(9deg) skewX(2deg)}}@keyframes tilt{from{transform:rotate(-20deg)}to{transform:rotate(20deg)}}@keyframes batSway{from{transform:rotate(-12deg) scaleX(.95)}to{transform:rotate(13deg) scaleX(1.05)}}@keyframes clothWave{from{transform:translateY(-5px) rotate(-13deg) skewX(-5deg)}to{transform:translateY(6px) rotate(15deg) skewX(7deg)}}@keyframes boneRattle{from{transform:rotate(-5deg) translateX(-2px)}to{transform:rotate(5deg) translateX(3px)}}@keyframes wallShake{from{transform:rotate(-4deg)}to{transform:rotate(4deg)}}
+.sparkle{position:absolute;width:8px;height:8px;background:#fff4a2;transform:rotate(45deg);opacity:0;z-index:7;pointer-events:none;animation:flash 1.1s ease-out both}.sparkle:before,.sparkle:after{content:"";position:absolute;background:inherit;left:2px;top:-7px;width:4px;height:22px;border-radius:4px}.sparkle:after{transform:rotate(90deg)}@keyframes flash{0%{opacity:0;transform:translateY(14px) rotate(0) scale(.2)}25%{opacity:1}100%{opacity:0;transform:translateY(-35px) rotate(110deg) scale(1)}}
+/* A user-provided image takes the place of the decorative stage scenery. */
+.stage.custom-background{background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important}
+.stage.custom-background::before,.stage.custom-background > .moon,.stage.custom-background > .cloud,.stage.custom-background > .hill,.stage.custom-background > .stage-floor,.stage.custom-background > .curtain,.stage.custom-background > .lantern-decoration{display:none!important}
+.monster img.avatar{width:100%;height:100%;object-fit:contain;pointer-events:none;-webkit-user-drag:none}
+.portrait img.avatar{width:100%;height:100%;max-height:100%;object-fit:contain;-webkit-user-drag:none}
+.music-toggle{position:absolute;top:9px;right:9px;z-index:20;min-width:74px;min-height:35px;border:1px solid #b8a6de99;border-radius:20px;background:#221c57d9;color:#fff5d0;font-weight:800;font-size:13px;line-height:1.1;padding:6px 9px;box-shadow:0 2px 8px #1a103855}
+.music-toggle:active{transform:translateY(1px)}
+@media(max-width:560px){.music-toggle{top:7px;right:7px;min-width:65px;min-height:31px;font-size:12px;padding:5px 7px}.stage-top h1{max-width:calc(100vw - 92px);font-size:17px}}
+/* selector */
+.panel{background:var(--panel);min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:6px;padding:9px 15px 11px;box-shadow:0 -5px 0 #eac99c;border-top:4px solid #e2a96a;z-index:10}
+.panel-heading{display:flex;gap:8px;justify-content:space-between;align-items:center;min-height:26px}.panel-heading strong{font-size:clamp(14px,1.4vw,18px);white-space:nowrap}.panel-heading .subtle{font-size:12px;color:#786a83}.total{border-radius:30px;background:#fff5d6;padding:5px 12px;font-weight:900;color:#754362;white-space:nowrap;font-size:14px}.total b{font-size:20px;color:#c15a5d;font-variant-numeric:tabular-nums}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:6px;min-height:0}.monster-card{display:flex;align-items:center;gap:7px;min-width:0;min-height:0;padding:4px 7px;background:white;border:2px solid #e6dfeb;border-radius:14px;box-shadow:0 2px 0 #e7dee9}.monster-card.chosen{border-color:#ffb965;background:#fffaf0}.portrait{display:flex;align-items:center;justify-content:center;flex:none;width:clamp(32px,4.3vw,51px);height:100%;max-height:67px}.portrait svg{width:100%;max-height:100%}.card-right{display:flex;min-width:0;flex:1;flex-direction:column;align-items:center;gap:3px}.monster-name{font-size:clamp(12px,1.13vw,16px);font-weight:900;white-space:nowrap;line-height:1.1}.stepper{display:flex;align-items:center;justify-content:center;gap:4px;width:100%}.step{display:grid;place-items:center;flex:none;border:0;border-radius:10px;width:clamp(38px,3.9vw,43px);height:clamp(38px,3.9vw,43px);font-weight:900;font-size:24px;line-height:1;color:#fff;box-shadow:0 3px 0 #0002}.step.minus{background:#77729f}.step.plus{background:#ed8b6c}.step:active:not(:disabled){transform:translateY(2px);box-shadow:0 1px 0 #0002}.amount{width:clamp(21px,2.35vw,34px);text-align:center;line-height:1;color:#41234f;font-weight:900;font-size:clamp(23px,2.2vw,30px);font-variant-numeric:tabular-nums}
+.panel-footer{display:flex;align-items:center;gap:9px;min-height:45px}.reset{height:44px;border-radius:12px;border:2px solid #d5cad9;background:#fff;color:#685d79;font-weight:800;padding:0 17px;white-space:nowrap}.equals{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;height:48px;border:0;border-radius:13px;background:linear-gradient(180deg,#ffc962,#f39c47);box-shadow:0 4px 0 #c9783b;color:#542b57;font-weight:900;font-size:clamp(19px,2vw,25px);text-shadow:0 1px #fff7;letter-spacing:.04em}.equals .eq-mark{font-size:35px;line-height:1}.equals:not(:disabled):active{transform:translateY(3px);box-shadow:0 1px 0 #c9783b}.footer-note{color:#8a7e91;font-size:11px;white-space:nowrap}
+/* svg shape helpers */
+.eye{fill:white;stroke:#382547;stroke-width:2.5}.pupil{fill:#352044}.smile{fill:none;stroke:#352044;stroke-width:3;stroke-linecap:round}.line{fill:none;stroke:#382547;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:850px){.panel{padding-left:8px;padding-right:8px}.monster-card{padding:3px;gap:2px}.portrait{width:36px}.stepper{gap:2px}.step{width:34px;height:36px}.panel-heading .subtle,.footer-note{display:none}.stage-note{top:66px;max-width:92vw;min-width:0}.stage-top h1{font-size:22px}}
+@media(max-width:560px){#app{grid-template-rows:minmax(0,1fr) minmax(0,1fr)}.panel{overflow:auto;grid-template-rows:auto minmax(220px,1fr) auto}.cards{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(4,minmax(0,1fr))}.monster-card{min-height:55px}.stage-note{top:70px;font-size:13px}.stage-top .eyebrow{font-size:10px}.stage-top h1{font-size:19px}.moon{right:4%}.stage-message{font-size:21px}}
+@media(max-height:650px) and (min-width:561px){.panel{padding-top:4px;padding-bottom:5px;gap:3px}.panel-heading{min-height:23px}.monster-card{border-radius:10px}.portrait{max-height:48px}.panel-footer{min-height:37px}.reset{height:36px}.equals{height:39px}.step{height:29px;width:32px}.stage-note{font-size:15px}}
+/* iPhone / narrow screens: selector stays touchable and the action stays visible */
+@media (max-width:600px){
+  html,body{height:100%;overscroll-behavior:none}
+  #app{height:100vh;height:100dvh;grid-template-rows:minmax(130px,38fr) minmax(0,62fr)}
+  .panel{overflow:hidden;min-height:0;padding:5px 7px max(7px,env(safe-area-inset-bottom));gap:4px;grid-template-rows:auto minmax(0,1fr) auto}
+  .panel-heading{min-height:22px;gap:4px}
+  .panel-heading strong{font-size:clamp(11px,3.1vw,15px);white-space:normal;line-height:1.1}
+  .total{font-size:11px;padding:3px 6px;flex-shrink:0}.total b{font-size:17px}
+  .cards{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(64px,1fr);align-content:start;gap:5px;padding:1px 2px 5px}
+  .monster-card{min-height:64px;padding:3px 4px;gap:2px;border-radius:10px}
+  .portrait{width:clamp(25px,8vw,38px);height:52px;max-height:52px}
+  .monster-name{font-size:clamp(11px,3vw,14px)}
+  .stepper{gap:2px}.step{width:clamp(30px,8.5vw,39px);height:37px;min-width:30px;font-size:24px}
+  .amount{width:20px;font-size:23px;flex-shrink:0}
+  .panel-footer{min-height:43px;flex-shrink:0}.equals{height:43px}.reset{height:41px;padding:0 11px}
+  .stage-note{top:53px;font-size:12px;white-space:normal}
+}
+@media (max-width:600px) and (max-height:570px){
+  #app{grid-template-rows:minmax(85px,35fr) minmax(0,65fr)}
+  .cards{grid-auto-rows:minmax(58px,1fr)}.monster-card{min-height:58px}
+}
+@media (min-width:601px) and (max-height:480px){
+  #app{grid-template-rows:minmax(80px,45fr) minmax(0,55fr)}
+  .panel{overflow:hidden;grid-template-rows:auto minmax(0,1fr) auto}
+  .cards{overflow-y:auto;min-height:0;grid-auto-rows:minmax(50px,1fr)}
+}
+@media(prefers-reduced-motion:reduce){.cloud{animation:none}.monster .avatar{animation-duration:1.1s!important}}
+
+/* iPhone Safari: anchor both areas to the visible viewport, never allow
+   the grid/flex intrinsic height to push the controls below the screen. */
+@media (max-width:600px), (pointer:coarse) and (max-height:500px) {
+  html,body {height:100%;overflow:hidden!important;margin:0}
+  #app {display:block!important;position:fixed!important;inset:0!important;width:100%!important;
+        height:100%!important;height:100dvh!important;overflow:hidden!important}
+  .stage {position:absolute!important;top:0;left:0;right:0;height:46%!important;min-height:0!important}
+  .panel {position:absolute!important;top:46%;bottom:0;left:0;right:0;
+          width:100%;height:auto!important;min-height:0!important;overflow:hidden!important;
+          display:flex!important;flex-direction:column!important;
+          padding:5px 7px max(9px,env(safe-area-inset-bottom))!important;gap:5px!important}
+  .panel-heading {flex:none!important;min-height:22px}
+  .cards {display:grid!important;flex:1 1 auto!important;min-height:0!important;
+          overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;
+          grid-template-columns:repeat(2,minmax(0,1fr))!important;
+          grid-template-rows:none!important;grid-auto-rows:68px!important;align-content:start!important}
+  .panel-footer {display:flex!important;flex:none!important;min-height:48px!important;
+                 position:relative!important;z-index:30!important;background:var(--panel)}
+  .step {min-height:36px!important;min-width:30px!important}
+}
+@media (pointer:coarse) and (orientation:landscape) and (max-height:500px) {
+  .stage {height:43%!important}
+  .panel {top:43%;padding-bottom:max(4px,env(safe-area-inset-bottom))!important}
+  .cards {grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-auto-rows:61px!important}
+  .panel-heading {min-height:18px}
+  .panel-footer {min-height:39px!important}
+  .equals {height:38px!important}.reset{height:36px!important}
+}
+
+/* Tappable dancing characters: the stage itself stays non-intercepting. */
+.playfield{pointer-events:none}
+.monster{pointer-events:auto;cursor:pointer;touch-action:manipulation;user-select:none;-webkit-user-select:none;transform-origin:50% 50%;}
+.monster .avatar{pointer-events:none;animation-duration:var(--sway-duration)!important;animation-delay:var(--sway-delay)!important}
+.monster.affected .avatar{filter:drop-shadow(0 0 12px var(--glow,#fff5a5)) drop-shadow(0 0 5px white)}
+.impact-dot{position:absolute;z-index:45;width:10px;height:10px;border-radius:50%;pointer-events:none;background:var(--effect-color,#ffee99);box-shadow:0 0 12px var(--effect-color);animation:impactScatter .85s ease-out forwards;transform:translate(-50%,-50%)}
+.impact-dot.star-dot{border-radius:2px;transform:translate(-50%,-50%) rotate(45deg)}
+@keyframes impactScatter{0%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),calc(-50% + var(--dy))) rotate(260deg) scale(.15)}}
+.impact-ring{position:absolute;z-index:40;width:25px;height:25px;border:5px solid #ffe0ac;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;animation:impactExpand .68s ease-out forwards;box-shadow:0 0 15px #fff9}
+@keyframes impactExpand{from{width:18px;height:18px;opacity:1}to{width:170px;height:170px;opacity:0}}
+.tap-hint{position:absolute;right:12px;bottom:8px;z-index:8;border-radius:30px;color:#ffefc6;background:#241a55c4;padding:5px 12px;font-size:clamp(11px,1.35vw,16px);font-weight:900;pointer-events:none;opacity:0;transition:opacity .24s}
+.tap-hint.visible{opacity:1}
+@media(max-width:600px){.tap-hint{right:6px;bottom:4px;font-size:11px;padding:4px 6px}.impact-ring{border-width:3px}}
+@media(max-width:360px){.equals{gap:4px!important;font-size:15px!important;white-space:nowrap}.equals .eq-mark{font-size:26px}.reset{padding:0 8px!important;font-size:12px}.panel-footer{gap:5px!important}}
+@media(max-width:360px) and (orientation:portrait){.cards{grid-auto-rows:52px!important}.portrait{width:29px!important}.monster-name{font-size:12px}.step{height:34px!important;min-height:34px!important;width:29px!important;min-width:27px!important}.amount{width:18px!important;font-size:19px!important}}
+</style>
+</head>
+<body>
+<!-- The 8 yokai are original, vector drawings and do not require image files. -->
+<svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden"><defs>
+<!-- umbrellas: one-legged, one-eyed traditional karakasa -->
+<symbol id="y-umbrella" viewBox="0 0 120 140">
+<path d="M60 56V17" stroke="#4f305c" stroke-width="5" stroke-linecap="round"/><path d="M60 18Q65 9 72 16" class="line"/>
+<path d="M8 65Q16 23 60 15Q104 23 112 65Q99 55 86 66Q72 55 60 66Q47 55 35 66Q23 55 8 65Z" fill="#fa697c" stroke="#5b2a61" stroke-width="3"/>
+<path d="M60 17Q39 37 35 66M60 17Q82 37 86 66M60 17V66" fill="none" stroke="#ffe0b2" stroke-width="2.5" opacity=".8"/>
+<path d="M60 66V112Q62 123 74 121" fill="none" stroke="#5c2c6b" stroke-width="8" stroke-linecap="round"/>
+<ellipse class="eye" cx="60" cy="49" rx="11" ry="12"/><circle class="pupil" cx="61" cy="51" r="5"/><path d="M47 73Q60 83 74 72Q70 89 62 89Q51 88 47 73" fill="#fff3d9" stroke="#5c2c6b" stroke-width="2"/><path d="M61 79Q72 77 70 91Q66 100 62 97Z" fill="#f26e94"/>
+<path d="M61 113L49 129L72 129" fill="none" stroke="#5c2c6b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</symbol>
+<!-- kappa -->
+<symbol id="y-kappa" viewBox="0 0 120 140">
+<path d="M29 81Q6 61 16 53M91 81Q114 61 104 53" fill="none" stroke="#69bda0" stroke-width="12" stroke-linecap="round"/>
+<ellipse cx="60" cy="95" rx="35" ry="35" fill="#70c996" stroke="#366c63" stroke-width="3"/><ellipse cx="60" cy="100" rx="22" ry="23" fill="#f0e6a2"/>
+<path d="M38 119L30 133M82 119L89 133" class="line" style="stroke:#4a9274;stroke-width:11"/>
+<ellipse cx="60" cy="49" rx="43" ry="39" fill="#80d59d" stroke="#3a7765" stroke-width="3"/>
+<ellipse cx="60" cy="20" rx="23" ry="10" fill="#c8edac" stroke="#3a7765" stroke-width="3"/><ellipse cx="60" cy="18" rx="17" ry="5" fill="#77cdd5"/>
+<ellipse class="eye" cx="44" cy="47" rx="10" ry="12"/><ellipse class="eye" cx="76" cy="47" rx="10" ry="12"/><circle cx="46" cy="49" r="4.7" class="pupil"/><circle cx="74" cy="49" r="4.7" class="pupil"/>
+<path d="M45 65Q60 55 75 65L60 81Z" fill="#f8c174" stroke="#ab7c54" stroke-width="2"/><path d="M53 72H67" class="line"/>
+</symbol>
+<!-- vampire with a cape, fangs and pointed hair -->
+<symbol id="y-dracula" viewBox="0 0 120 140">
+<path d="M41 65Q15 66 5 128L30 120L40 134L61 119L81 134L90 120L115 128Q107 63 78 63Z" fill="#422951" stroke="#281f43" stroke-width="3"/>
+<path d="M31 73L8 122L34 110L54 128L60 86Z" fill="#b93f61"/><path d="M89 73L112 122L86 110L66 128L60 86Z" fill="#b93f61"/>
+<path d="M43 91L36 132H84L77 91Z" fill="#513969" stroke="#2c2548" stroke-width="3"/>
+<path d="M48 79L60 111L72 79L60 88Z" fill="#fffdf0" stroke="#3a284b" stroke-width="2"/>
+<path d="M58 93H62L65 101L60 106L55 101Z" fill="#ed5873"/>
+<path d="M36 63L24 81L43 89M84 63L96 81L77 89" fill="none" stroke="#f0c4bf" stroke-width="10" stroke-linecap="round"/>
+<path d="M38 21Q26 3 46 8L53 2L61 11L78 2L84 12Q100 5 92 27L95 57Q85 37 35 58Z" fill="#24243c" stroke="#4a3557" stroke-width="3"/>
+<ellipse cx="60" cy="48" rx="29" ry="33" fill="#f8e3e1" stroke="#52374f" stroke-width="2.5"/>
+<path d="M33 34L50 24L60 39L75 23L89 34Q92 7 75 9Q57 -1 42 11Q28 16 33 34Z" fill="#28243f"/>
+<path d="M42 46L53 45M67 45L78 46" stroke="#62364e" stroke-width="3" stroke-linecap="round"/>
+<ellipse cx="48" cy="50" rx="4" ry="5" fill="#a7395d"/><ellipse cx="72" cy="50" rx="4" ry="5" fill="#a7395d"/>
+<path d="M50 64Q60 70 70 64" class="smile"/><path d="M53 66L56 76L60 68L64 76L67 66" fill="#fff" stroke="#fff" stroke-width="1.5"/>
+</symbol>
+<!-- flying white cloth yokai -->
+<symbol id="y-ittanmomen" viewBox="0 0 120 140">
+<path d="M36 14Q35 5 46 7L90 14Q102 14 101 27L93 60Q88 78 103 89Q116 105 102 128Q93 137 86 123Q74 106 63 112Q45 125 27 116Q9 106 17 89Q25 69 34 53Z" fill="#fcfbf3" stroke="#7995ba" stroke-width="4" stroke-linejoin="round"/>
+<path d="M41 23Q65 18 90 26M39 99Q54 110 75 100M25 101Q35 89 34 75M91 76Q97 98 92 113" stroke="#bdcce1" stroke-width="3" fill="none" stroke-linecap="round"/>
+<path d="M40 51Q46 42 53 51M68 52Q75 43 81 52" stroke="#4c547e" stroke-width="6" fill="none" stroke-linecap="round"/>
+<circle cx="49" cy="54" r="3.2" fill="#343b60"/><circle cx="73" cy="55" r="3.2" fill="#343b60"/>
+<path d="M51 74Q61 84 76 71" stroke="#4b537b" stroke-width="4" fill="none" stroke-linecap="round"/>
+<path d="M20 103Q8 107 10 117M102 108Q113 116 105 127" fill="none" stroke="#d3dff0" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+<!-- oversized skeleton yokai: skull, ribs, arms and leg bones -->
+<symbol id="y-gashadokuro" viewBox="0 0 120 140">
+<path d="M39 103L31 135M82 103L90 135" fill="none" stroke="#f2e9cf" stroke-width="10" stroke-linecap="round"/>
+<path d="M36 131L25 135M87 131L98 135" stroke="#d2c9ad" stroke-width="8" stroke-linecap="round"/>
+<path d="M41 82Q19 91 17 110M79 82Q101 91 103 110" fill="none" stroke="#eee4c9" stroke-width="9" stroke-linecap="round"/>
+<circle cx="17" cy="112" r="6" fill="#e7d8b9"/><circle cx="103" cy="112" r="6" fill="#e7d8b9"/>
+<path d="M39 78L43 115Q60 127 77 115L81 78" fill="#efe7cf" stroke="#55486e" stroke-width="3"/>
+<path d="M60 78L60 121M43 90Q59 101 77 90M43 99Q59 110 77 99M44 108Q60 118 76 108" stroke="#5d5475" stroke-width="5" fill="none" stroke-linecap="round"/>
+<path d="M41 18Q60 4 80 18Q97 28 93 50Q91 65 80 69L78 82H42L41 69Q27 62 27 47Q24 28 41 18Z" fill="#f6ecd6" stroke="#59496a" stroke-width="3"/>
+<path d="M35 43Q42 31 54 43Q57 60 44 61Q31 60 35 43Z" fill="#343048"/><path d="M67 43Q80 30 86 43Q91 61 76 61Q64 60 67 43Z" fill="#343048"/>
+<path d="M56 63L60 56L65 63L66 68H54Z" fill="#52455e"/>
+<path d="M42 73H78V81H42Z" fill="#fcf6e7" stroke="#5a4c6b" stroke-width="2"/>
+<path d="M49 73V81M56 73V81M64 73V81M71 73V81" stroke="#7b7080" stroke-width="2"/>
+<path d="M41 27Q60 16 79 27" fill="none" stroke="#fff8e7" stroke-width="4"/>
+</symbol>
+<!-- tengu -->
+<symbol id="y-tengu" viewBox="0 0 120 140">
+<path d="M34 90Q13 81 14 54L38 72M86 90Q107 81 106 54L82 72" fill="#6f5f9f" stroke="#3f3263" stroke-width="3"/>
+<path d="M43 118L39 133M77 118L81 133" stroke="#52416b" stroke-width="10" stroke-linecap="round"/>
+<path d="M31 92L27 123H93L89 92Z" fill="#567f9c" stroke="#3e4165" stroke-width="3"/>
+<ellipse cx="60" cy="55" rx="37" ry="42" fill="#e96a6b" stroke="#813b5a" stroke-width="3"/>
+<path d="M30 35Q27 12 48 17Q58 9 71 17Q95 11 93 35L76 29L60 32L43 29Z" fill="#fff6df" stroke="#6a5672" stroke-width="3"/>
+<path d="M33 16Q59 4 86 16" stroke="#705279" stroke-width="7" stroke-linecap="round"/>
+<path d="M43 50L53 53M77 50L67 53" stroke="#623447" stroke-width="6" stroke-linecap="round"/>
+<circle cx="49" cy="58" r="4" fill="#402542"/><circle cx="71" cy="58" r="4" fill="#402542"/>
+<path d="M60 57Q94 54 103 71Q92 83 59 72" fill="#f17d70" stroke="#813b5a" stroke-width="3"/>
+<path d="M49 85Q61 91 74 84" class="smile"/>
+</symbol>
+<!-- long-neck ghost -->
+<symbol id="y-rokuro" viewBox="0 0 120 140">
+<path d="M30 106Q60 82 90 106L99 134H21Z" fill="#8fb7d7" stroke="#4b577a" stroke-width="3"/><path d="M60 96L49 134M60 96L71 134" fill="none" stroke="#527fa3" stroke-width="3"/>
+<path d="M60 105Q32 81 50 61Q73 38 60 28" fill="none" stroke="#f5d4bc" stroke-width="14" stroke-linecap="round"/>
+<path d="M31 35Q23 0 61 6Q103 5 92 42L103 80Q80 64 79 36L45 36Q39 63 22 79Z" fill="#37304f" stroke="#272440" stroke-width="3"/>
+<ellipse cx="61" cy="34" rx="27" ry="31" fill="#f6ddc9" stroke="#62465d" stroke-width="2"/>
+<path d="M35 25Q36 -1 64 5Q91 9 88 25Q65 20 57 12Q46 25 35 25Z" fill="#37304f"/>
+<ellipse cx="52" cy="36" rx="3" ry="5" class="pupil"/><ellipse cx="72" cy="36" rx="3" ry="5" class="pupil"/><path d="M55 52Q61 57 69 52" class="smile"/><circle cx="42" cy="45" r="5" fill="#ed9fb1" opacity=".5"/><circle cx="80" cy="45" r="5" fill="#ed9fb1" opacity=".5"/>
+</symbol>
+<!-- wall yokai -->
+<symbol id="y-nurikabe" viewBox="0 0 120 140">
+<path d="M29 112V136M91 112V136" stroke="#52667b" stroke-width="14" stroke-linecap="round"/>
+<path d="M19 17Q19 12 26 12H94Q101 12 101 20V115Q100 123 93 123H26Q19 123 19 115Z" fill="#86a7ba" stroke="#3d5a72" stroke-width="5"/>
+<path d="M23 38L37 50L32 64M96 30L80 43L88 59M23 91L42 87L50 102M95 94L84 98L90 116" fill="none" stroke="#b8d1d5" stroke-width="4" opacity=".95"/>
+<ellipse cx="42" cy="69" rx="11" ry="12" fill="#f6f6ec"/><ellipse cx="78" cy="69" rx="11" ry="12" fill="#f6f6ec"/><circle cx="44" cy="71" r="5" fill="#44546a"/><circle cx="76" cy="71" r="5" fill="#44546a"/>
+<path d="M48 97Q60 104 72 97" fill="none" stroke="#44546a" stroke-width="4" stroke-linecap="round"/>
+</symbol>
+</defs></svg>
+<audio id="bgm" src="music.mp3" loop preload="auto" playsinline style="display:none"></audio>
+<main id="app">
+<section class="stage" id="stage" aria-label="ようかいが踊るステージ">
+ <div class="moon"></div><div class="cloud c1"></div><div class="cloud c2"></div><div class="cloud c3"></div><div class="hill"></div><div class="hill h2"></div>
+ <div class="stage-floor"></div><div class="curtain l"></div><div class="curtain r"></div><div class="lantern-decoration left"></div><div class="lantern-decoration right"></div>
+ <div class="stage-top"><div class="eyebrow">YOKAI DANCE PARTY</div><h1>ようかい どんちゃんダンス</h1></div>
+ <button id="musicToggle" class="music-toggle" type="button" aria-label="BGMを再生・停止" aria-pressed="true">♪ BGM</button>
+ <div class="stage-note" id="modeText">どの ようかいを よぼうかな？</div>
+ <div class="stage-message" id="stageMessage" aria-live="polite">すきな ようかいを えらんで<br>「＝」を おしてね！</div>
+ <div id="playfield" class="playfield"></div><div id="tapHint" class="tap-hint">👆 おどる ようかいを タップ！</div>
+</section>
+<section class="panel" aria-label="ようかいを選ぶパネル">
+ <div class="panel-heading"><strong>よびたい ようかいの かずを きめよう！</strong><span class="subtle">「＋」でふやす　「－」でへらす</span><span class="total">ごうけい <b id="total">0</b> たい</span></div>
+ <div class="cards" id="cards">
+<div class="monster-card" data-kind="umbrella"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-umbrella"></use></svg></div><div class="card-right"><div class="monster-name">からかさ</div><div class="stepper"><button class="step minus" type="button" aria-label="からかさを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="からかさを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="kappa"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-kappa"></use></svg></div><div class="card-right"><div class="monster-name">かっぱ</div><div class="stepper"><button class="step minus" type="button" aria-label="かっぱを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="かっぱを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="dracula"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-dracula"></use></svg></div><div class="card-right"><div class="monster-name">ドラキュラ</div><div class="stepper"><button class="step minus" type="button" aria-label="ドラキュラを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="ドラキュラを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="ittanmomen"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-ittanmomen"></use></svg></div><div class="card-right"><div class="monster-name">一反木綿</div><div class="stepper"><button class="step minus" type="button" aria-label="一反木綿を1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="一反木綿を1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="gashadokuro"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-gashadokuro"></use></svg></div><div class="card-right"><div class="monster-name">がしゃどくろ</div><div class="stepper"><button class="step minus" type="button" aria-label="がしゃどくろを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="がしゃどくろを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="tengu"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-tengu"></use></svg></div><div class="card-right"><div class="monster-name">てんぐ</div><div class="stepper"><button class="step minus" type="button" aria-label="てんぐを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="てんぐを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="rokuro"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-rokuro"></use></svg></div><div class="card-right"><div class="monster-name">ろくろくび</div><div class="stepper"><button class="step minus" type="button" aria-label="ろくろくびを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="ろくろくびを1たいふやす">＋</button></div></div></div>
+<div class="monster-card" data-kind="nurikabe"><div class="portrait"><svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-nurikabe"></use></svg></div><div class="card-right"><div class="monster-name">ぬりかべ</div><div class="stepper"><button class="step minus" type="button" aria-label="ぬりかべを1たいへらす" disabled>－</button><output class="amount">0</output><button class="step plus" type="button" aria-label="ぬりかべを1たいふやす">＋</button></div></div></div>
+</div>
+ <div class="panel-footer"><button id="reset" class="reset" type="button" aria-label="すべての妖怪の数を0に戻す">↺ リセット</button><button id="start" class="equals" type="button"><span class="eq-mark">＝</span><span id="startLabel">レッツ　ダンス</span></button><span class="footer-note">いちどに 30たいまで</span></div>
+</section>
+</main>
+<script>
+(() => {
+'use strict';
+const YOKAI=[
+ {id:'umbrella',name:'からかさ'}, {id:'kappa',name:'かっぱ'},
+ {id:'dracula',name:'ドラキュラ'}, {id:'ittanmomen',name:'一反木綿'},
+ {id:'gashadokuro',name:'がしゃどくろ'}, {id:'tengu',name:'てんぐ'},
+ {id:'rokuro',name:'ろくろくび'}, {id:'nurikabe',name:'ぬりかべ'}
+];
+const MAX_EACH=9, MAX_STAGE=30;
+const counts=Object.fromEntries(YOKAI.map(y=>[y.id,0]));
+const cards=document.getElementById('cards'),totalEl=document.getElementById('total');
+const playfield=document.getElementById('playfield'),stage=document.getElementById('stage');
+const message=document.getElementById('stageMessage'),modeText=document.getElementById('modeText');
+const start=document.getElementById('start'),startLabel=document.getElementById('startLabel'),reset=document.getElementById('reset');
+
+// MUSIC: 'music.mp3' must be alongside 'index.html'. Loops during selection,
+// dancing, and after the dancers leave. Mobile browsers require a gesture.
+const bgm=document.getElementById('bgm'),musicToggle=document.getElementById('musicToggle');
+let musicEnabled=true;
+function musicStatus(){
+ musicToggle.setAttribute('aria-pressed',String(musicEnabled));
+ musicToggle.textContent=!musicEnabled?'♪ OFF':bgm.error?'♪ 音源なし':!bgm.paused?'♫ ON':'♪ BGM';
+}
+function playMusic(){
+ if(!musicEnabled || !bgm.paused || bgm.error)return;
+ const action=bgm.play();
+ if(action&&typeof action.then==='function')action.then(musicStatus).catch(musicStatus);
+}
+musicToggle.addEventListener('click',()=>{
+ musicEnabled=!musicEnabled;
+ if(musicEnabled)playMusic();else bgm.pause();
+ musicStatus();
+});
+bgm.addEventListener('playing',musicStatus);
+bgm.addEventListener('pause',musicStatus);
+bgm.addEventListener('error',musicStatus);
+bgm.addEventListener('ended',playMusic);
+// Attempt autoplay; Safari/iPhone may block this until the first touch.
+playMusic();
+for(const eventType of ['pointerdown','touchend','click','keydown']){
+ document.addEventListener(eventType,playMusic,{capture:true,passive:true});
+}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)playMusic()});
+window.addEventListener('pageshow',playMusic);
+
+// IMAGE REPLACEMENT: put transparent PNGs in /images. Missing files
+// automatically fall back to the original built-in SVG yokai illustrations.
+// Background image replaces the entire built-in stage scene when supplied.
+const IMAGE_FILES={
+ background:'images/background.png',
+ yokai:{
+  umbrella:'images/umbrella.png', kappa:'images/kappa.png',
+  dracula:'images/dracula.png', ittanmomen:'images/ittanmomen.png',
+  gashadokuro:'images/gashadokuro.png', tengu:'images/tengu.png',
+  rokuro:'images/rokuro.png', nurikabe:'images/nurikabe.png'
+ }
+};
+const loadedImages=Object.create(null);
+function loadReplaceableImages(){
+ const bg=new Image();
+ bg.onload=()=>{stage.style.backgroundImage=`url("${IMAGE_FILES.background}")`;stage.classList.add('custom-background')};
+ bg.onerror=()=>{};bg.src=IMAGE_FILES.background;
+ for(const [id,path] of Object.entries(IMAGE_FILES.yokai)){
+  const img=new Image();
+  img.onload=()=>{
+   loadedImages[id]=path;
+   const card=cards.querySelector(`[data-kind="${id}"]`);
+   if(card)card.querySelector('.portrait').innerHTML=avatarMarkup(id);
+   for(const actor of actors){if(actor.id===id)actor.el.innerHTML=avatarMarkup(id)}
+  };
+  img.onerror=()=>{};
+  img.src=path;
+ }
+}
+let running=false, activeAnimations=[], showId=0;
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+const symbol=id=>`<svg class="avatar" viewBox="0 0 120 140" aria-hidden="true"><use href="#y-${id}"></use></svg>`;
+const avatarMarkup=id=>loadedImages[id]?`<img class="avatar" src="${loadedImages[id]}" alt="" draggable="false">`:symbol(id);
+YOKAI.forEach(y=>{
+ const card=cards.querySelector(`[data-kind="${y.id}"]`);
+ card.querySelector('.minus').addEventListener('click',()=>change(y.id,-1));
+ card.querySelector('.plus').addEventListener('click',()=>change(y.id,1));
+});
+function selectedTotal(){return Object.values(counts).reduce((a,b)=>a+b,0)}
+function updatePanel(){
+ totalEl.textContent=selectedTotal();
+ for(const y of YOKAI){const card=cards.querySelector(`[data-kind="${y.id}"]`);card.querySelector('.amount').textContent=counts[y.id];card.querySelector('.minus').disabled=running||counts[y.id]===0;card.querySelector('.plus').disabled=running||counts[y.id]>=MAX_EACH||selectedTotal()>=MAX_STAGE;card.classList.toggle('chosen',counts[y.id]>0)}
+ reset.disabled=selectedTotal()===0;start.disabled=running;startLabel.textContent=running?'ダンス中！':'レッツ　ダンス';
+}
+function change(id,amount){if(running)return;const target=counts[id]+amount;if(target<0||target>MAX_EACH)return;if(amount>0&&selectedTotal()>=MAX_STAGE){say('ステージは 30たいまでだよ！');return}counts[id]=target;updatePanel();}
+function say(text){message.classList.remove('hidden','pop');message.innerHTML='';message.textContent=text;void message.offsetWidth;message.classList.add('pop')}
+function hideMessage(){message.classList.add('hidden');message.classList.remove('pop')}
+reset.addEventListener('click',()=>{YOKAI.forEach(y=>counts[y.id]=0);updatePanel();if(!running){modeText.textContent='どの ようかいを よぼうかな？';say('ようかいを えらんでね！')}});
+function chooseMode(chosen){
+ const num=chosen.length,ids=new Set(chosen.map(c=>c.id));
+ if(num>=4)return {type:'festival',text:'🌟 ひゃっきやこう！ だいらんぶ！'};
+ if(ids.has('dracula')&&ids.has('ittanmomen'))return {type:'flight',text:'🦇 ドラキュラと 一反木綿の そらとび！'};
+ if(ids.has('umbrella')&&ids.has('ittanmomen'))return {type:'spin',text:'🌀 からかさと 一反木綿の くるくるダンス！'};
+ if(ids.has('gashadokuro')&&ids.has('rokuro'))return {type:'bones',text:'💀 がしゃどくろと ろくろくびの ガタガタダンス！'};
+ if(ids.has('kappa')&&ids.has('gashadokuro'))return {type:'chase',text:'👣 がしゃどくろが かっぱを おいかける！'};
+ if(ids.has('tengu')&&ids.has('nurikabe'))return {type:'dodge',text:'💨 てんぐが ぬりかべを とびこえる！'};
+ if(num===1&&chosen[0].count>=3)return {type:'sync',text:'🎵 おなじ ようかいでも ちがう おどり！'};
+ if(chosen.reduce((sum,c)=>sum+c.count,0)===1)return {type:'solo',text:'✨ ひとりで ノリノリ！'};
+ return {type:'party',text:'🎶 わいわい ダンスタイム！'};
+}
+// Yokai have independent random routes: four stay on the ground, four can fly.
+const rand=(a,b)=>a+Math.random()*(b-a);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const ease=t=>t*t*(3-2*t);
+const STYLE={
+ umbrella:{speed:1.02,altitude:.46,flight:true,spin:175},
+ kappa:{speed:1.05,altitude:.88,flight:false,spin:0},
+ dracula:{speed:1.38,altitude:.34,flight:true,spin:0},
+ ittanmomen:{speed:1.12,altitude:.36,flight:true,spin:25},
+ gashadokuro:{speed:.72,altitude:.88,flight:false,spin:0},
+ tengu:{speed:1.5,altitude:.39,flight:true,spin:0},
+ rokuro:{speed:1.03,altitude:.88,flight:false,spin:0},
+ nurikabe:{speed:.68,altitude:.88,flight:false,spin:0}
+};
+const EFFECTS=[
+ {id:'comet',color:'#82f7fc'},
+ {id:'tornado',color:'#c79aff'},
+ {id:'teleport',color:'#eebaff'},
+ {id:'bounce',color:'#ffdb69'},
+ {id:'reverse',color:'#ff8ea9'},
+ {id:'burst',color:'#ffe173'}
+];
+let actors=[],frameId=0,showStart=0,showEnd=0,exitStart=0,showPhase='idle',lastFrame=0;
+let bounds={w:1,h:1},lastSpark=0,effectCounter=0;
+function stageSize(){bounds={w:Math.max(stage.clientWidth,1),h:Math.max(stage.clientHeight,1)};return bounds}
+function radius(a){return a.size*.46}
+function limits(a){
+ const r=radius(a),rh=a.size*.64;
+ return {left:r+3,right:Math.max(r+3,bounds.w-r-3),top:rh+4,bottom:Math.max(rh+4,bounds.h-rh-7)};
+}
+function confine(a){const b=limits(a);a.x=clamp(a.x,b.left,b.right);a.y=clamp(a.y,b.top,b.bottom)}
+// The "ground" is a band along the lower edge of the stage.  Position by
+// FEET (not by center), so 2x skeletons stand on the same floor as small yokai.
+// This works with both the built-in stage and user-supplied background photos.
+function isGrounded(id){return !STYLE[id].flight}
+function groundY(a){
+ const b=limits(a);
+ const footY=bounds.h*(a.groundLane||.89);
+ const centerY=footY-a.size*(140/240);
+ return clamp(centerY,b.top,b.bottom);
+}
+function jumpHeight(a,proportion){
+ // Keep the avatar in the stage even at the peak of a tap-induced jump.
+ return Math.max(0,Math.min(a.size*proportion,bounds.h*.29,groundY(a)-limits(a).top-5));
+}
+
+// Exact on-stage scale multipliers relative to a normal-sized dancer.
+// These do not affect the small thumbnails in the number selector.
+const SIZE_MULTIPLIER={nurikabe:1.5,gashadokuro:2,tengu:2};
+const sizeMultiplier=id=>SIZE_MULTIPLIER[id]||1;
+function initialPositions(deck){
+ const {w,h}=stageSize(),n=deck.length;
+ const rows=n<=4?1:n<=13?2:n<=23?3:4;
+ const cols=Math.ceil(n/rows);
+ // Size is based ONLY on the dimensions of the stage, never on the
+ // number or mixture of yokai. Crowding is intentional with large groups.
+ // Retain exactly 1.5x for nurikabe, 2x for gashadokuro and tengu.
+ const base=Math.min(105,h*.22,w*.24);
+ const placed=[];
+ for(let i=0;i<n;i++){
+  const size=base*sizeMultiplier(deck[i]),r=size*.48,rh=size*.64;
+  const left=Math.min(w*.5,r+3),right=Math.max(left,w-r-3);
+  const top=Math.min(h*.5,rh+4),bottom=Math.max(top,h-rh-7);
+  const row=Math.floor(i/cols),col=i%cols;
+  const c=Math.min(cols,n-row*cols);
+  const desiredX=clamp(w*(col+1)/(c+1),left,right);
+  // Ground walkers start in the lower band; fliers may appear at any altitude.
+  const groundLane=rand(.86,.95);
+  const desiredY=isGrounded(deck[i])
+   ?clamp(h*groundLane-size*(140/240),top,bottom)
+   :clamp(h*(row+1)/(rows+1),top,bottom);
+  let best=null,bestScore=-Infinity;
+  // Keep the opening lineup varied rather than stacking big characters
+  // directly on top of one another at the same grid position.
+  for(let trial=0;trial<35;trial++){
+   const x=trial===0?desiredX:trial<10?clamp(desiredX+rand(-w*.24,w*.24),left,right):rand(left,right);
+   const y=isGrounded(deck[i])?desiredY:
+     trial===0?desiredY:trial<10?clamp(desiredY+rand(-h*.22,h*.22),top,bottom):rand(top,bottom);
+   let overlap=0;
+   for(const q of placed){
+    const near=(size+q.size)*.53;
+    const dist=Math.hypot(x-q.x,y-q.y);
+    overlap+=Math.pow(Math.max(0,(near-dist)/near),2);
+   }
+   const score=-overlap*4-Math.hypot((x-desiredX)/w,(y-desiredY)/h)*.16+rand(0,.15);
+   if(score>bestScore){bestScore=score;best={size,x,y,groundLane}}
+  }
+  placed.push(best);
+ }
+ return placed;
+}
+// Pick a different destination for every individual. Crossing paths is fine;
+// remaining at the same occupied location is not. Prefer open landing spots,
+// not the same left/right borders for the whole crowd.
+function chooseDestination(a,far=false){
+ const b=limits(a),p=STYLE[a.id];let best=null,bestScore=-Infinity;
+ const diagonal=Math.max(1,Math.hypot(bounds.w,bounds.h));
+ const grounded=!p.flight;
+ for(let j=0;j<22;j++){
+  let x=rand(b.left,b.right),y=rand(b.top,b.bottom);
+  // Occasional edge-to-edge flights, otherwise explore the whole stage.
+  if(Math.random()<.27)x=Math.random()<.5?rand(b.left,b.left+(b.right-b.left)*.16):rand(b.right-(b.right-b.left)*.16,b.right);
+  if(grounded){
+   // Travel side-to-side, not diagonally through the air. Slight lane changes
+   // provide depth variation without turning the character into a flier.
+   y=groundY(a);
+  }else if(Math.random()<.24)y=Math.random()<.5?rand(b.top,b.top+(b.bottom-b.top)*.17):rand(b.bottom-(b.bottom-b.top)*.17,b.bottom);
+  else if(Math.random()<.38){
+   const band=clamp(p.altitude+rand(-.37,.37),0,1);
+   y=b.top+(b.bottom-b.top)*band;
+  }
+  let congestion=0;
+  for(const other of actors){
+   if(other===a||other.phase==='exit')continue;
+   const space=Math.max(23,(a.size+other.size)*.47);
+   // A target occupied by another dancer is less attractive; it is not forbidden.
+   const toGoal=Math.hypot(x-other.tx,y-other.ty);
+   if(Number.isFinite(toGoal)&&toGoal<space*1.8)
+    congestion+=(1-toGoal/(space*1.8))*(a.id===other.id ? .53 : .30);
+   // Also discourage aiming at an actor who is likely to remain nearby.
+   const px=other.x+(other.vx||0)*.2,py=other.y+(other.vy||0)*.2;
+   const toActor=Math.hypot(x-px,y-py);
+   if(toActor<space*1.1)congestion+=(1-toActor/(space*1.1))*.28;
+  }
+  const distance=Math.hypot(x-a.x,y-a.y)/diagonal;
+  const score=distance*(far?1.22:.75)+rand(0,.52)-Math.min(congestion,2.3)
+   +(grounded?Math.abs(x-a.x)/Math.max(1,b.right-b.left)*.6:0);
+  if(score>bestScore){bestScore=score;best={x,y}}
+ }
+ a.tx=best.x;a.ty=best.y;a.targetAge=0;a.targetLimit=grounded?rand(1.4,3.0):rand(1.25,3.1);
+}
+
+function createActor(id,i,n,place,now){
+ const el=document.createElement('div');el.className='monster';el.dataset.kind=id;
+ el.setAttribute('aria-label',`${YOKAI.find(y=>y.id===id).name}をタップしてわざを出す`);
+ el.style.width=place.size+'px';el.style.height=(place.size*140/120)+'px';
+ el.style.setProperty('--sway-duration',rand(.25,1.1).toFixed(2)+'s');
+ el.style.setProperty('--sway-delay',(-rand(0,1)).toFixed(2)+'s');
+ el.style.zIndex=String(5+(i*7)%11);
+ el.innerHTML=avatarMarkup(id);playfield.appendChild(el);
+ const side=(i%2===0?-1:1),startX=side===-1?-place.size:bounds.w+place.size;
+ const a={id,el,i,size:place.size,x:startX,y:place.y+rand(-25,25),vx:0,vy:0,
+  tx:place.x,ty:place.y,initialX:place.x,initialY:place.y,
+  startX,enterY:place.y+rand(-10,10),enterAt:now+i*48,enterTime:rand(680,1240),
+  angle:rand(-30,30),spinAccum:0,phase:'intro',oscPhase:rand(0,6.3),swingFreq:rand(1.2,2.7),
+  groundLane:place.groundLane,speedFactor:rand(.74,1.28),targetAge:0,targetLimit:rand(1,3),
+  nextHopAt:rand(.35,2.0),hopStart:-10,hopDuration:0,hopHeight:0,
+  nextSpin:rand(1.4,4),spinBoost:0,role:Math.random(),effect:null,lastEffect:null,
+  lastTouch:0,lastTrail:0,age:0,opacity:0,overlapTime:0};
+ el.addEventListener('pointerdown',e=>{
+  if(showPhase!=='dance'||!running)return;
+  e.preventDefault();e.stopPropagation();triggerEffect(a);
+ });
+ return a;
+}
+function setPosition(a,x,y,rotation=0,scale=1,opacity=1){
+ a.el.style.transform=`translate3d(${(x-a.size/2).toFixed(1)}px,${(y-a.size*140/240).toFixed(1)}px,0) rotate(${rotation.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
+ a.el.style.opacity=String(clamp(opacity,0,1));
+}
+function sparkParticles(x,y,color,count=14,spread=115){
+ for(let i=0;i<count;i++){
+  const d=document.createElement('div');d.className='impact-dot';
+  const angle=i/count*Math.PI*2+rand(-.3,.3),dist=rand(spread*.27,spread);
+  d.style.cssText=`left:${x}px;top:${y}px;--dx:${Math.cos(angle)*dist}px;--dy:${Math.sin(angle)*dist}px;--effect-color:${color};animation-duration:${rand(.5,1.2).toFixed(2)}s;`;
+  if(i%3===0)d.classList.add('star-dot');
+  playfield.appendChild(d);d.addEventListener('animationend',()=>d.remove(),{once:true});
+ }
+}
+function ring(x,y,color){
+ const r=document.createElement('div');r.className='impact-ring';
+ r.style.cssText=`left:${x}px;top:${y}px;border-color:${color}`;
+ playfield.appendChild(r);r.addEventListener('animationend',()=>r.remove(),{once:true});
+}
+function triggerEffect(a){
+ const now=performance.now();if(now-a.lastTouch<620)return;
+ a.lastTouch=now;
+ const candidates=EFFECTS.filter(e=>e.id!==a.lastEffect);
+ const chosen=candidates[Math.floor(Math.random()*candidates.length)];a.lastEffect=chosen.id;
+ const t=chosen.id;a.effect={id:t,from:now,duration:t==='tornado'?1950:t==='teleport'?1100:1650,
+  anchorX:a.x,anchorY:a.y,lastX:a.x,lastY:a.y,offset:rand(0,Math.PI*2)};
+ a.el.classList.add('affected');a.el.style.setProperty('--glow',chosen.color);
+ // A tap can prolong the show, but the show remains finite.
+ showEnd=Math.min(showEnd+1200,showStart+30000);
+ ring(a.x,a.y,chosen.color);sparkParticles(a.x,a.y,chosen.color,t==='burst'?22:15,Math.min(120,bounds.w*.25));
+ if(t==='teleport'){
+  chooseDestination(a,true);
+  const x=a.tx,y=a.ty;a.effect.teleX=x;a.effect.teleY=y;
+ }else if(t==='reverse'){
+  a.vx=-a.vx*1.55;a.vy=-a.vy*1.55;
+  a.tx=clamp(a.x+a.vx*.65,limits(a).left,limits(a).right);
+  a.ty=clamp(a.y+a.vy*.65,limits(a).top,limits(a).bottom);
+ }else if(t==='comet'||t==='burst'||t==='bounce')chooseDestination(a,true);
+ // Avoid a fixed repeating tap sequence while still guaranteeing variety.
+}
+function activeEffect(a,now,dt){
+ const e=a.effect;if(!e)return {x:a.x,y:a.y,rot:0,scale:1,opacity:1,speed:1};
+ const t=(now-e.from)/e.duration,u=clamp(t,0,1);
+ if(t>=1){
+  if(e.id==='tornado'){a.x=clamp(e.lastX,limits(a).left,limits(a).right);a.y=clamp(e.lastY,limits(a).top,limits(a).bottom)}
+  if(e.id==='teleport'){a.x=e.teleX;a.y=e.teleY}
+  a.effect=null;a.el.classList.remove('affected');chooseDestination(a,true);
+  return {x:a.x,y:a.y,rot:0,scale:1,opacity:1,speed:1};
+ }
+ if(e.id==='tornado'){
+  const angle=e.offset+u*Math.PI*9,rad=Math.sin(u*Math.PI)*Math.min(bounds.w,bounds.h)*.35;
+  if(isGrounded(a.id)){
+   // A ground tornado is a spinning hop in place/along the floor, not flight.
+   e.lastX=clamp(e.anchorX+Math.cos(angle)*Math.min(bounds.w*.17,a.size*1.25)*Math.sin(u*Math.PI),limits(a).left,limits(a).right);
+   e.lastY=clamp(groundY(a)-Math.abs(Math.sin(angle*.65))*jumpHeight(a,.48),limits(a).top,limits(a).bottom);
+  }else{
+   e.lastX=clamp(e.anchorX+Math.cos(angle)*rad,limits(a).left,limits(a).right);
+   e.lastY=clamp(e.anchorY+Math.sin(angle)*rad,limits(a).top,limits(a).bottom);
+  }
+  if(now-a.lastTrail>115){a.lastTrail=now;ring(e.lastX,e.lastY,'#b594ff')}
+  return {x:e.lastX,y:e.lastY,rot:u*1440,scale:1.1+Math.sin(u*Math.PI)*.25,opacity:1,speed:0};
+ }
+ if(e.id==='teleport'){
+  if(t>.38&& !e.didTeleport){e.didTeleport=true;a.x=e.teleX;a.y=e.teleY;
+   ring(a.x,a.y,'#f6c4ff');sparkParticles(a.x,a.y,'#ecc0ff',14,65);}
+  const show=u<.38?1-ease(u/.38):ease((u-.38)/.62);
+  return {x:a.x,y:a.y,rot:u*720,scale:.15+.85*show,opacity:show,speed:0};
+ }
+ if(e.id==='bounce')return {x:a.x,
+  y:a.y-Math.abs(Math.sin(u*Math.PI*3))*(isGrounded(a.id)?jumpHeight(a,.95):Math.min(100,bounds.h*.29)),
+  rot:Math.sin(u*Math.PI*6)*25,scale:1.13,opacity:1,speed:1.4};
+ if(e.id==='reverse')return {x:a.x+Math.sin(u*22)*13,y:a.y+(isGrounded(a.id)?0:Math.cos(u*24)*9),rot:Math.sin(u*35)*40,scale:1.05,opacity:1,speed:1.35};
+ if(e.id==='comet'||e.id==='burst'){
+  if(now-a.lastTrail>90){a.lastTrail=now;sparkParticles(a.x,a.y,e.id==='comet'?'#79faff':'#ffdf69',4,25)}
+  return {x:a.x,y:a.y,rot:u*(e.id==='comet'?720:1440),scale:1.13,opacity:1,speed:e.id==='comet'?2.3:1.7};
+ }
+ return {x:a.x,y:a.y,rot:0,scale:1,opacity:1,speed:1};
+}
+function animateDancer(a,dt,now){
+ a.age+=dt;a.targetAge+=dt;
+ if(a.targetAge>a.targetLimit||Math.hypot(a.tx-a.x,a.ty-a.y)<Math.max(18,a.size*.4))chooseDestination(a);
+ const p=STYLE[a.id],flight=p.flight;
+ const base=Math.min(550,Math.max(200,bounds.w*.66));
+ const effect=a.effect,boost=effect?(effect.id==='comet'?2.3:effect.id==='burst'?1.7:effect.id==='reverse'?1.35:effect.id==='bounce'?1.35:1):1;
+ let speed=base*p.speed*a.speedFactor*boost;
+ if(showPhase==='dance'&&currentMode==='festival')speed*=1.06;
+ if(effect&&['teleport','tornado'].includes(effect.id))speed=0;
+ let dx=a.tx-a.x,dy=a.ty-a.y;const dist=Math.max(1,Math.hypot(dx,dy));
+ // Allow dancers to cross and temporarily overlap. Do not continuously push
+ // a large crowd apart: that makes everyone accumulate in a cramped cluster.
+ // Break up only persistent, same-direction overlaps (especially same types).
+ let stackedWith=null,stackedDistance=Infinity;
+ if(!effect||!['teleport','tornado'].includes(effect.id)){
+  for(const b of actors){
+   if(a===b||b.phase!=='dance'||b.i>a.i)continue;
+   const sx=a.x-b.x,sy=a.y-b.y,d=Math.hypot(sx,sy);
+   const limit=(radius(a)+radius(b))*.73;
+   if(d>limit||d>=stackedDistance)continue;
+   if(Math.hypot(a.vx-b.vx,a.vy-b.vy)>Math.max(65,speed*.37))continue;
+   stackedWith=b;stackedDistance=d;
+  }
+ }
+ if(stackedWith){a.overlapTime+=dt}
+ else a.overlapTime=Math.max(0,a.overlapTime-dt*2.5);
+ if(stackedWith&&a.overlapTime>(a.id===stackedWith.id ? .34 : .55)){
+  // One character changes course instead of forcibly moving all characters.
+  const dx=a.x-stackedWith.x,dy=a.y-stackedWith.y;
+  const theta=Math.atan2(dy||rand(-1,1),dx||rand(-1,1))+(Math.random()<.5?-1:1)*Math.PI*.5;
+  chooseDestination(a,true);
+  a.vx+=Math.cos(theta)*speed*.6;
+  a.vy+=Math.sin(theta)*speed*.6;
+  a.overlapTime=0;
+ }
+ let desiredX=dx/dist*speed,desiredY=dy/dist*speed;
+ // Independent type-specific movement, not a shared keyframe choreography.
+ const age=a.age,phase=a.oscPhase;
+ if(a.id==='ittanmomen'){desiredX+=Math.sin(age*3.0+phase)*speed*.21;desiredY+=Math.sin(age*2.6+phase)*speed*.25}
+ if(a.id==='rokuro'){desiredX+=Math.sin(age*5.4+phase)*speed*.30}
+ if(a.id==='tengu'){desiredY+=Math.sin(age*4.7+phase)*speed*.32}
+ if(a.id==='kappa'){desiredY+=Math.cos(age*8+phase)*speed*.20}
+ if(a.id==='gashadokuro'){desiredX+=Math.cos(age*2.8+phase)*speed*.14}
+ if(currentMode==='flight'&&flight)desiredY-=speed*.19;
+ if(currentMode==='chase'&&a.id==='gashadokuro'){
+   const k=actors.filter(b=>b.id==='kappa'&&b.phase==='dance').sort((b,c)=>Math.abs(a.x-b.x)-Math.abs(a.x-c.x))[0];
+   if(k){desiredX+=(k.x-a.x)*.27;} // chase along the stage floor
+ }
+ if(currentMode==='dodge'&&a.id==='tengu'){desiredY-=speed*.3}
+ if(currentMode==='spin'&&(a.id==='umbrella'||a.id==='ittanmomen'))a.spinAccum+=dt*310;
+ if(!flight){
+  // All four ground walkers use horizontal locomotion. Vertical movement
+  // comes only from discrete hops drawn below, never from a flying path.
+  desiredY=(groundY(a)-a.y)*5;
+ }
+ const steer=clamp(dt*(flight?3.8:2.7),0,1);
+ a.vx+=(desiredX-a.vx)*steer;a.vy+=(desiredY-a.vy)*steer;
+ const cap=speed*1.28,v=Math.hypot(a.vx,a.vy);
+ if(v>cap&&cap>0){a.vx*=cap/v;a.vy*=cap/v}
+ a.x+=a.vx*dt;a.y+=a.vy*dt;
+ const b=limits(a);
+ if(a.x<=b.left||a.x>=b.right){a.x=clamp(a.x,b.left,b.right);a.vx*=-.65;chooseDestination(a,true)}
+ if(a.y<=b.top||a.y>=b.bottom){a.y=clamp(a.y,b.top,b.bottom);a.vy=flight?-a.vy*.65:0;if(flight)chooseDestination(a,true)}
+ let move=activeEffect(a,now,dt);
+ let x=move.x,y=move.y,angle=0,scale=1;
+ if(!flight){
+  // Individual, non-synchronised jumps: kappa hops often and high; rokuro
+  // skips; the giant skeleton lumbers; nurikabe usually walks and stomps.
+  const hop={kappa:[.55,1.20,.82],rokuro:[1.05,2.0,.38],
+   gashadokuro:[1.5,2.9,.22],nurikabe:[2.0,3.5,.14]}[a.id];
+  if(age>=a.nextHopAt){
+   a.hopStart=age;a.hopDuration=rand(.42,.83)*(a.id==='gashadokuro'?1.25:1);
+   a.hopHeight=jumpHeight(a,hop[2]*rand(.65,1.15));
+   a.nextHopAt=age+a.hopDuration+rand(hop[0],hop[1]);
+  }
+  const progress=(age-a.hopStart)/Math.max(.01,a.hopDuration);
+  if(progress>=0&&progress<=1){
+   y-=Math.sin(Math.PI*progress)*a.hopHeight;
+   angle+=Math.sin(Math.PI*progress)*(a.id==='kappa'?13:a.id==='rokuro'?8:4);
+  }
+ }
+ if(a.id==='umbrella'){a.spinAccum+=dt*(p.spin+Math.sin(age*2+phase)*110);angle=a.spinAccum; y+=Math.sin(age*6+phase)*8}
+ if(a.id==='kappa'){angle+=Math.sin(age*7+phase)*11}
+ if(a.id==='dracula'){angle=Math.sin(age*6+phase)*18;y+=Math.sin(age*3+phase)*14;scale=1+Math.sin(age*10+phase)*.07}
+ if(a.id==='ittanmomen'){angle=Math.sin(age*3.1+phase)*42;x+=Math.sin(age*4+phase)*12;y+=Math.cos(age*2.7+phase)*12}
+ if(a.id==='gashadokuro'){angle+=Math.sin(age*4.5+phase)*5}
+ if(a.id==='tengu'){angle=Math.sin(age*5.5+phase)*31;y+=Math.sin(age*5.2+phase)*17}
+ if(a.id==='rokuro'){angle+=Math.sin(age*2.9+phase)*15;x+=Math.sin(age*3.4+phase)*5}
+ if(a.id==='nurikabe'){angle+=Math.sin(age*2.0+phase)*5}
+ a.nextSpin-=dt;
+ if(a.nextSpin<=0){a.nextSpin=rand(1.5,5.2);a.spinBoost=flight?rand(350,940)*(Math.random()<.5?-1:1):rand(-32,32)}
+ if(Math.abs(a.spinBoost)>8){angle+=a.spinBoost*dt*.85;a.spinAccum+=a.spinBoost*dt*.85;a.spinBoost*=Math.pow(.12,dt)}
+ angle+=move.rot;scale*=move.scale;
+ const lx=clamp(x,b.left,b.right),ly=clamp(y,b.top,b.bottom);
+ a.draw={x:lx,y:ly,angle,scale,opacity:move.opacity};
+}
+// In a crowded show it is natural to pass in front of other characters.
+// No hard collision solver: the autonomous destinations and anti-stacking
+// rule above keep each dancer moving without packing the entire group.
+function animateFrame(now){
+ if(!running)return;
+ stageSize();const dt=clamp((now-lastFrame)/1000,0,.055);lastFrame=now;
+ if(showPhase==='dance'&&now>=showEnd){
+  showPhase='exit';exitStart=now;say('また あそぼうね！');
+  for(const a of actors){
+   a.phase='exit';a.exitX=a.x;a.exitY=a.y;a.outX=(Math.random()<.5?-1:1)*(bounds.w+a.size*2);
+   a.outY=isGrounded(a.id)?groundY(a):rand(-bounds.h*.25,bounds.h*1.15);
+   a.outStart=now+a.i*29;a.outDuration=rand(650,1100);
+   a.el.classList.remove('is-dancing','affected');a.effect=null;
+  }
+ }
+ let done=0,entered=0;
+ for(const a of actors){
+  if(a.phase==='intro'){
+   if(now<a.enterAt){setPosition(a,a.startX,a.enterY,0,.65,0);continue}
+   const t=clamp((now-a.enterAt)/a.enterTime,0,1),z=ease(t);
+   setPosition(a,a.startX+(a.initialX-a.startX)*z,
+    a.enterY+(a.initialY-a.enterY)*z-Math.sin(t*Math.PI)*(isGrounded(a.id)?Math.min(16,a.size*.2):25),
+    (1-z)*(a.startX<0?-1:1)*(isGrounded(a.id)?14:320),.65+.35*z,t);
+   if(t>=1){a.phase='dance';a.x=a.initialX;a.y=a.initialY;a.vx=rand(-100,100);a.vy=rand(-70,70);chooseDestination(a,true);a.el.classList.add('is-dancing')}
+  }else if(a.phase==='dance'){
+   animateDancer(a,dt,now);entered++;
+  }else if(a.phase==='exit'){
+   const t=clamp((now-a.outStart)/a.outDuration,0,1);
+   setPosition(a,a.exitX+(a.outX-a.exitX)*ease(t),a.exitY+(a.outY-a.exitY)*ease(t)-Math.sin(t*Math.PI)*(isGrounded(a.id)?Math.min(a.size*.22,23):35),
+    t*(isGrounded(a.id)?16:720)*(a.i%2?1:-1),1-t*.45,1-t);
+   if(t>=1)done++;
+  }
+ }
+ if(showPhase==='dance'||showPhase==='intro'){
+  for(const a of actors){if(a.phase==='dance'&&a.draw){const d=a.draw;setPosition(a,d.x,d.y,d.angle,d.scale,d.opacity)}}
+ }
+ if(showPhase==='intro'&&actors.every(a=>a.phase==='dance')){
+  showPhase='dance';showEnd=now+Math.min(19000,13000+actors.length*110);
+  say('ようかいを タップして わざをだそう！');
+  const marker=showId;
+  setTimeout(()=>{if(running&&showId===marker&&showPhase==='dance')hideMessage()},1500);
+  const hint=document.getElementById('tapHint');if(hint)hint.classList.add('visible');
+ }
+ if(showPhase==='exit'&&done===actors.length){finishShow();return}
+ if(showPhase==='dance'&&now-lastSpark>430){
+  lastSpark=now;
+  if(Math.random()<.7&&actors.length){
+   const a=actors[Math.floor(Math.random()*actors.length)];
+   if(a.phase==='dance')sparkParticles(a.x,a.y,'#ffdf8e',2,30);
+  }
+ }
+ frameId=requestAnimationFrame(animateFrame);
+}
+function finishShow(){
+ cancelAnimationFrame(frameId);showPhase='idle';actors=[];playfield.replaceChildren();
+ const hint=document.getElementById('tapHint');if(hint)hint.classList.remove('visible');
+ modeText.textContent='つぎは どんな ダンスかな？';say('もういっかい おどらせよう！');
+ running=false;updatePanel();
+}
+let currentMode='party';
+function perform(){
+ if(running)return;
+ const total=selectedTotal();if(!total){say('まず ようかいを 1たい えらんでね！');return}
+ const chosen=YOKAI.filter(y=>counts[y.id]>0).map(y=>({...y,count:counts[y.id]}));
+ const mode=chooseMode(chosen);currentMode=mode.type;
+ const deck=[];const maximum=Math.max(...chosen.map(y=>y.count));
+ for(let k=0;k<maximum;k++)chosen.forEach(y=>{if(k<y.count)deck.push(y.id)});
+ running=true;showId++;updatePanel();modeText.textContent=mode.text;say('ようかい とうじょう！');
+ playfield.replaceChildren();stageSize();const places=initialPositions(deck);
+ const now=performance.now();actors=deck.map((id,i)=>createActor(id,i,deck.length,places[i],now));
+ showStart=now;showEnd=Infinity;showPhase='intro';lastFrame=now;lastSpark=now;
+ cancelAnimationFrame(frameId);frameId=requestAnimationFrame(animateFrame);
+}
+start.addEventListener('click',perform);
+loadReplaceableImages();
+updatePanel();
+})();
+</script>
+</body>
+</html>
